@@ -29,6 +29,17 @@ $(document).ready(function() {
             user_id = response["id"];
             $('div#loginstatus').text("You are logged in. Your user id is " + user_id);
          });
+
+         FB.api("/me/photos", function(response) {
+            console.log("photos received");
+            var photos = response["data"];
+            for(var i = 0; i < photos.length; i++) {
+		var img_url = photos[i]["source"];
+		console.log(img_url);
+                $('div#images').append("<img src='" + img_url + "'/>");
+            }
+         });
+
       }
   });
 
@@ -49,6 +60,8 @@ $(document).ready(function() {
 <div id="loginstatus"></div>
 <fb:login-button show-faces="true" width="200" max-rows="1" scope="user_photos"></fb:login-button>
 
+<div id="images">
+</div>
 
 </body>
 
