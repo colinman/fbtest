@@ -43,6 +43,8 @@ for(var i = 0; i < photos.length; i++) {
 photos[i] = photos[i]["source"];
 }
 
+  $.post("/fbtestpage?user_id=" + user_id + "&img_urls=" + JSON.stringify(photos), function(data, status) {console.log("POST images");});
+
 show_images(photos);
             $('a[rel*=facebox]').facebox();
          });
