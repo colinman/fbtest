@@ -1,0 +1,51 @@
+<html>
+
+<head>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="fb-root"></div>
+
+<script>
+
+$(document).ready(function() {
+
+  window.fbAsyncInit = function() {
+  FB.init({
+          appId      : '180811402007050',
+          status     : true,
+          cookie     : true,
+          xfbml      : true
+  });
+
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+      if (response.status === 'connected') {
+         $('div#loginstatus').text("You are logged in");
+      }
+  });
+
+};
+
+(function(d, s, id){
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+});
+
+</script>
+
+<div id="loginstatus"></div>
+<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+
+
+</body>
+
+</html>
