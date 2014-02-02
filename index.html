@@ -3,6 +3,9 @@
 <head>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="./src/facebox.js"></script>
+
+<link rel="stylesheet" type="text/css" href="./src/facebox.css"/>
 
 </head>
 
@@ -13,6 +16,9 @@
 <script>
 
 $(document).ready(function() {
+
+  $.facebox.settings.closeImage = 'src/closelabel.png';
+  $.facebox.settings.loadingImage = 'src/loading.gif';
 
   window.fbAsyncInit = function() {
   FB.init({
@@ -33,11 +39,12 @@ $(document).ready(function() {
          FB.api("/me/photos", function(response) {
             console.log("photos received");
             var photos = response["data"];
-            for(var i = 0; i < photos.length; i++) {
-		var img_url = photos[i]["source"];
-		console.log(img_url);
-                $('div#images').append("<img src='" + img_url + "'/>");
-            }
+for(var i = 0; i < photos.length; i++) {            
+photos[i] = photos[i]["source"];
+}
+
+show_images(photos);
+            $('a[rel*=facebox]').facebox();
          });
 
       }
@@ -54,6 +61,14 @@ $(document).ready(function() {
 }(document, 'script', 'facebook-jssdk'));
 
 });
+
+function show_images(images) {
+for(var i = 0; i < images.length; i++) {
+var img_url = images[i];
+$('div#images').append("<a href='" + img_url + "' rel='facebox'><div style='width:200px; height:200px; background-size:cover; background-repeat:no-repeat;  background-image:url(" + img_url + ");'></div></a>");
+}
+
+}
 
 </script>
 
