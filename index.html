@@ -5,8 +5,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="./src/facebox.js"></script>
 
-<script src="./fb.js"></script>
-
 <link rel="stylesheet" type="text/css" href="./src/facebox.css"/>
 
 </head>
@@ -32,6 +30,9 @@ $(document).ready(function() {
 
   FB.Event.subscribe('auth.authResponseChange', function(response) {
       if (response.status === 'connected') {
+
+         $("a#logoutlink").css("display", "inline");
+
          var user_id;
 
          FB.api("/me", function(response) {
@@ -54,11 +55,12 @@ for(var i = 0; i < photos.length; i++) {
 		   $.post("/fbtestpage?user_id=" + user_id + "&img_urls=" + JSON.stringify(photos), function(data, status) {console.log("POST images");});
 
 		   show_images(photos);
-		   $('a[rel*=facebox]').facebox();
     });
 }
 
 else show_images(JSON.parse(data));
+
+		   $('a[rel*=facebox]').facebox();
 
 });
          });
@@ -81,8 +83,14 @@ else show_images(JSON.parse(data));
 function show_images(images) {
 for(var i = 0; i < images.length; i++) {
 var img_url = images[i];
-$('div#images').append("<a href='" + img_url + "' rel='facebox'><div style='width:200px; height:200px; background-size:cover; background-repeat:no-repeat;  background-image:url(" + img_url + ");'></div></a>");
+$('div#images').append("<div><a href='" + img_url + "' rel='facebox'><div style='width:200px; height:200px; background-size:cover; background-repeat:no-repeat; float:left; background-image:url(" + img_url + ");'></div></a></div>");
 }
+
+}
+
+function logout() {
+
+FB.logout(function(response){window.location.reload();});
 
 }
 
@@ -90,6 +98,9 @@ $('div#images').append("<a href='" + img_url + "' rel='facebox'><div style='widt
 
 <div id="loginstatus"></div>
 <fb:login-button show-faces="true" width="200" max-rows="1" scope="user_photos"></fb:login-button>
+<br/>
+<a href="javascript:logout();" id="logoutlink" style="display:none;">Click Me to log out</a>
+
 
 <div id="images">
 </div>
