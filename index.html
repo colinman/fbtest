@@ -5,6 +5,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="./src/facebox.js"></script>
 
+<script src="./fb.js"></script>
+
 <link rel="stylesheet" type="text/css" href="./src/facebox.css"/>
 
 </head>
@@ -31,25 +33,37 @@ $(document).ready(function() {
   FB.Event.subscribe('auth.authResponseChange', function(response) {
       if (response.status === 'connected') {
          var user_id;
+
          FB.api("/me", function(response) {
             user_id = response["id"];
             $('div#loginstatus').text("You are logged in. Your user id is " + user_id);
-         });
 
-         FB.api("/me/photos", function(response) {
-            console.log("photos received");
-            var photos = response["data"];
-for(var i = 0; i < photos.length; i++) {            
-photos[i] = photos[i]["source"];
+            
+         $.get("/fbtestget?user_id=" + user_id, function(data) {
+               console.log('getting data from web service (if exists)');
+          if(data == "userdne") {
+
+
+ FB.api("/me/photos", function(response) {
+          console.log("photos received (from fb api call)");
+var photos = response["data"];
+for(var i = 0; i < photos.length; i++) {
+		       photos[i] = photos[i]["source"];
+		   }
+
+		   $.post("/fbtestpage?user_id=" + user_id + "&img_urls=" + JSON.stringify(photos), function(data, status) {console.log("POST images");});
+
+		   show_images(photos);
+		   $('a[rel*=facebox]').facebox();
+    });
 }
 
-  $.post("/fbtestpage?user_id=" + user_id + "&img_urls=" + JSON.stringify(photos), function(data, status) {console.log("POST images");});
+else show_images(JSON.parse(data));
 
-show_images(photos);
-            $('a[rel*=facebox]').facebox();
+});
          });
 
-      }
+}
   });
 
 };
