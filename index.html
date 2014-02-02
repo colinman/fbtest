@@ -24,7 +24,11 @@ $(document).ready(function() {
 
   FB.Event.subscribe('auth.authResponseChange', function(response) {
       if (response.status === 'connected') {
-         $('div#loginstatus').text("You are logged in");
+         var user_id;
+         FB.api("/me", function(response) {
+            user_id = response["id"];
+            $('div#loginstatus').text("You are logged in. Your user id is " + user_id);
+         });
       }
   });
 
@@ -43,7 +47,7 @@ $(document).ready(function() {
 </script>
 
 <div id="loginstatus"></div>
-<fb:login-button show-faces="true" width="200" max-rows="1" scope="email, user_likes"></fb:login-button>
+<fb:login-button show-faces="true" width="200" max-rows="1" scope="user_photos"></fb:login-button>
 
 
 </body>
